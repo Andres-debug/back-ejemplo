@@ -1,5 +1,7 @@
 // Importamos Express framework para crear el servidor web
 import express from "express";
+// Importamos CORS para habilitar peticiones desde diferentes dominios
+import cors from "cors";
 
 // IMPORTACIÓN DE RUTAS: importamos todos los módulos de rutas de la aplicación
 import userRoutes from "./routes/userRoutes.js";           // Rutas CRUD de usuarios
@@ -11,6 +13,10 @@ import cuentaRoutes from "./routes/cuentaRoutes.js"        // Rutas de cuentas b
 
 // CREACIÓN DE LA APLICACIÓN: inicializamos Express
 const app = express();
+
+// MIDDLEWARE GLOBAL: habilitamos CORS para todas las rutas
+// Esto permite que aplicaciones frontend desde otros dominios accedan a la API
+app.use(cors());
 
 // MIDDLEWARE GLOBAL: parser para convertir JSON del body de las peticiones
 // Sin este middleware, req.body sería undefined

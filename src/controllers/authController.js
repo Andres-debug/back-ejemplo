@@ -11,9 +11,17 @@ export const register = async (req,res)=>{
         // Extraemos los datos del cuerpo de la petición (destructuring)
         const {nombre,correo,password} = req.body;
 
+        // DEBUG: verificamos qué datos están llegando
+        console.log("Datos recibidos:", {nombre, correo, password: password ? "****" : "undefined"});
+
         // VALIDACIÓN: verificamos que todos los campos requeridos estén presentes
         if(!nombre || !correo || !password){
             return res.status(400).json({message: "Nombre,correo y password son requeridos"})
+        }
+
+        // VALIDACIÓN ADICIONAL: verificamos que password no esté vacío o sea solo espacios
+        if(typeof password !== 'string' || password.trim().length === 0){
+            return res.status(400).json({message: "Password debe ser una cadena válida no vacía"})
         }
 
         // VERIFICACIÓN DE DUPLICADOS: consultamos si el correo ya existe
@@ -27,11 +35,14 @@ export const register = async (req,res)=>{
         // SEGURIDAD: hasheamos la contraseña con bcrypt (salt de 10 rondas)
         const hashedPassword = await bcrypt.hash(password,10);
 
+        // DEBUG: verificamos que el hash se generó correctamente
+        console.log("Password hasheado exitosamente:", hashedPassword ? "Sí" : "No");
+
         // CREACIÓN: insertamos el nuevo usuario en la base de datos
         // SQL equivalente: INSERT INTO users (nombre, correo, password) VALUES (?, ?, ?)
         const newUser = await User.create({
-            nombre,
-            correo,
+            nombre: nombre.trim(),
+            correo: correo.trim().toLowerCase(),
             password: hashedPassword
         })
 

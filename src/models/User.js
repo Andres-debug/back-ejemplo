@@ -27,7 +27,7 @@ const User = sequelize.define("User",{
     // Campo password: contraseña hasheada del usuario
     password:{
         type: DataTypes.STRING,         // Tipo texto para almacenar hash
-        allowNull: false                // No puede ser null (obligatorio)
+        allowNull: true                // No puede ser null (obligatorio)
     }
 },{
     // Opciones del modelo
